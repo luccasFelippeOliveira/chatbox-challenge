@@ -1,21 +1,11 @@
-const express = require('express');
+import express from 'express';
+import { getStatusCheck, postMessage } from '../controllers/chatController.js';
 const router = express.Router();
 
-router.route('/').get(
-    (req, res, next) => {
-        try {
-            return res.status(200).json({
-                success: true,
-                data: 'Sucesso'
-            })
+router
+    .route('/')
+    .get(getStatusCheck)
+    .post(postMessage)
 
-        } catch (err) {
-            return res.status(500).json({
-                success: false,
-                error: 'Server error'
-            });
-        }
-    }
-)
 
-module.exports = router;
+export default router;

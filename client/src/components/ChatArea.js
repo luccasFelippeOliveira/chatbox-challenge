@@ -16,7 +16,7 @@ export const ChatArea = ({ className = "" }) => {
               }`}
               type={message.type}
             >
-              {message.text}
+              {message.message}
             </ChatBubble>
           </div>
         );

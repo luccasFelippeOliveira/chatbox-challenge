@@ -4,6 +4,7 @@ const chatBoxReducer = (state, action) => {
       return {
         ...state,
         messageList: [...state.messageList, action.payload],
+        userId: action.payload.userId,
         systemTyping: true,
       };
     case "RECEIVE_MESSAGE":

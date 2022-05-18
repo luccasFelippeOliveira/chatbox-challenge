@@ -14,7 +14,7 @@ export const ChatBoxForm = () => {
     event.preventDefault();
 
     const newText = {
-      text: textValue,
+      message: textValue,
       type: "user",
     };
 
