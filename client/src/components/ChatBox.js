@@ -1,8 +1,9 @@
 import axios from "axios";
-import React, { createContext, useReducer } from "react";
+import React, { createContext, useEffect, useReducer, useRef, useState } from "react";
 import chatBoxReducer from "../reducer/chatBoxReducer";
 import { ChatArea } from "./ChatArea";
 import { ChatBoxForm } from "./ChatBoxForm";
+import io from 'socket.io-client';
 
 // Inital State
 const initialState = {
@@ -15,6 +16,21 @@ export const ChatBoxContext = createContext(initialState);
 
 export const ChatBox = ({ className = "" }) => {
   const [state, dispatch] = useReducer(chatBoxReducer, initialState);
+  const socketRef = useRef(null);
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    console.log('ran useEffect')
+    const newSocket = io();
+    socketRef.current = newSocket;
+
+    socketRef.current.on('receive_message', receiveMessage);
+    socketRef.current.on('receive_user_id', receiveUserId);
+
+    return () => {
+      socketRef.current.disconnect();
+    }
+  }, [])
 
   const sendMessage = async (message) => {
     const config = {
@@ -25,7 +41,7 @@ export const ChatBox = ({ className = "" }) => {
     try {
       const body = {
         ...message,
-        userId: state.userId,
+        userId: userId,
       }
       const response = await axios.post('/api/v1/chat', body, config);
       dispatch({
@@ -37,6 +53,14 @@ export const ChatBox = ({ className = "" }) => {
     }
   };
 
+  const receiveMessage = async (message) => {
+    console.log(message)
+  }
+
+  const receiveUserId = (userId) => {
+    setUserId(userId);
+  }
+
   return (
     <div className={`bg-purple-600 p-5 flex flex-col rounded ${className}`}>
       <ChatBoxContext.Provider
@@ -44,6 +68,7 @@ export const ChatBox = ({ className = "" }) => {
           messageList: state.messageList,
           systemTyping: state.systemTyping,
           sendMessage,
+          socketRef
         }}
       >
         <ChatArea className="grow mb-5" />

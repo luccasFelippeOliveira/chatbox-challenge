@@ -1,12 +1,14 @@
 import { v4 as uuidV4 } from "uuid";
-import messageModel from "../../models/messageModel.js";
+import messageModel from "../models/messageModel.js";
 
 const chatService = {
+  createUserId: () => {
+    // return a userid
+    return uuidV4();
+  },
   createMessage: async (messageRequest) => {
     try {
       const { message, userId, type } = messageRequest.data;
-      // Creates a new userId if no userId is sent.
-      const normalizedUserId = userId ?? uuidV4();
 
       // Record message
       const newMessage = await messageModel.create({
