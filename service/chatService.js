@@ -1,5 +1,6 @@
 import { v4 as uuidV4 } from "uuid";
 import messageModel from "../models/messageModel.js";
+import axios from "axios";
 
 const chatService = {
   createUserId: () => {
@@ -40,6 +41,34 @@ const chatService = {
     }
   },
 
-  fetchResponse: (fetchRequest) => {},
+  fetchResponse: async (fetchRequest) => {
+    if (!fetchRequest.data) {
+      return {
+        response: 'error',
+        success: false,
+      };
+    }
+
+    try {
+      const response = await axios.get(process.env.MESSAGE_API_URL, {
+        params: {
+          type: 'word',
+          length: fetchRequest.data
+        }
+      });
+
+      return {
+        respose: 'fetch',
+        success: true,
+        data: response.data.text
+      };
+    } catch(err) {
+      return {
+        respose: 'error',
+        success: false,
+        error: err
+      }
+    }
+  },
 };
 export default chatService;

@@ -1,10 +1,12 @@
 const MESSAGES = {
     'error': {
         'en-US': {
-            E001: 'Internal Server Error'
+            E001: 'Internal Server Error',
+            E002: 'Error fetching message',
         },
         'pt-PT': {
-            E001: 'Erro Interno do Servidor'
+            E001: 'Erro Interno do Servidor',
+            E002: 'Erro ao buscar mensagem',
         }
     },
     'success': {
