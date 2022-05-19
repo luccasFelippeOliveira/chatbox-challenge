@@ -17,6 +17,10 @@ const messageSchema = new mongoose.Schema({
         trim: true,
         required: [true, getLocalizedMessage('V003', 'validation')]
     },
+    like: {
+        type: Boolean,
+        required: false
+    },
     createdAt: {
         type: Date,
         default: Date.now

@@ -14,6 +14,10 @@ const chats = (queue) => {
     // @route   POST /api/v1/chat/
     // @access  PUBLIC
     .post(controller.post);
+    
+  router.route('/like/:messageId')
+    .put(controller.putLike)
+    .delete(controller.deleteLike)
 
     return router;
 };

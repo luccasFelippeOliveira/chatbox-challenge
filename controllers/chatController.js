@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { getLocalizedMessage } from "../config/messages.js";
 import chatService from "../service/chatService.js";
 
-const chatController = ( queue) => {
+const chatController = (queue) => {
   return {
     get: (req, res, next) => {
       try {
@@ -34,16 +34,93 @@ const chatController = ( queue) => {
             success: true,
             data: response.data,
           });
-        }
-
-        if (response.response === "create" && response.success === false) {
+        } else if (
+          response.response === "create" &&
+          response.success === false
+        ) {
           return res.status(StatusCodes.BAD_REQUEST).json({
             success: false,
             data: response.data,
           });
+        } else {
+          return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            error: getLocalizedMessage("E001", "error"),
+          });
         }
+      } catch (err) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          error: getLocalizedMessage("E001", "error"),
+        });
+      }
+    },
 
-        if (response.response === "error") {
+    putLike: async (req, res, next) => {
+      try {
+        const { messageId } = req.params;
+        const likeMessageRequest = {
+          request: "update",
+          data: {
+            messageId: messageId,
+            isLike: true,
+          },
+        };
+        const response = await chatService.likeMessage(likeMessageRequest);
+
+        if (response.response === "update" && response.success === true) {
+          return res.status(StatusCodes.OK).json({
+            success: true,
+            data: response.data,
+          });
+        } else if (
+          response.response === "update" &&
+          response.success === false
+        ) {
+          return res.status(StatusCodes.BAD_REQUEST).json({
+            success: false,
+            data: response.data,
+          });
+        } else {
+          return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            error: getLocalizedMessage("E001", "error"),
+          });
+        }
+      } catch (err) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          error: getLocalizedMessage("E001", "error"),
+        });
+      }
+    },
+
+    deleteLike: async (req, res, next) => {
+      try {
+        const { messageId } = req.params;
+        const likeMessageRequest = {
+          request: "update",
+          data: {
+            messageId: messageId,
+            isLike: false,
+          },
+        };
+        const response = await chatService.likeMessage(likeMessageRequest);
+
+        if (response.response === "update" && response.success === true) {
+          return res.status(StatusCodes.OK).json({
+            success: true,
+            data: response.data,
+          });
+        } else if (
+          response.response === "update" &&
+          response.success === false
+        ) {
+          return res.status(StatusCodes.BAD_REQUEST).json({
+            success: false,
+            data: response.data,
+          });
+        } else {
           return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             success: false,
             error: getLocalizedMessage("E001", "error"),

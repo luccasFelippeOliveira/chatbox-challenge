@@ -1,6 +1,7 @@
 import { v4 as uuidV4 } from "uuid";
 import messageModel from "../models/messageModel.js";
 import axios from "axios";
+import { getLocalizedMessage } from "../config/messages.js";
 
 const chatService = {
   createUserId: () => {
@@ -70,5 +71,42 @@ const chatService = {
       }
     }
   },
+
+  likeMessage: async (likeRequest) => {
+    if (!likeRequest.data) {
+      return {
+        response: 'error',
+        success: false,
+      };
+    }
+
+    try {
+      // Find message
+      const message = await messageModel.findById(likeRequest.data.messageId);
+
+      if (!message) {
+        return {
+          response: 'update',
+          success: false,
+          data: getLocalizedMessage('E002', 'error')
+        }
+      }
+
+      message.like = likeRequest.data.isLike;
+
+      const updatedMessage = await message.save();
+      return {
+        response: 'update',
+        success: true,
+        data: updatedMessage
+      };
+    } catch (err) {
+      return {
+        response: 'error',
+        success: false,
+        error: err
+      }
+    }
+  }
 };
 export default chatService;

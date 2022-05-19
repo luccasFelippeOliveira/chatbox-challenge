@@ -20,6 +20,8 @@ export const ChatArea = ({ className = "" }) => {
                 message.type === "user" ? "float-right" : "float-left"
               }`}
               type={message.type}
+              messageId={message._id}
+              thumbsUp={message.like}
             >
               {message.message}
             </ChatBubble>

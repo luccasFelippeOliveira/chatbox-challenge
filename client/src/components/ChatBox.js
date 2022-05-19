@@ -53,6 +53,42 @@ export const ChatBox = ({ className = "" }) => {
     }
   };
 
+  const likeMessage = async (messageId) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    };
+
+    try {
+      const response = await axios.put('/api/v1/chat/like/' + messageId, {}, config);
+      dispatch({
+        type: 'SEND_LIKE',
+        payload: response.data.data
+      })
+    } catch (error) {
+      alert(Array.isArray(error.response.data.data) ? error.response.data.data.join(',') : error.response.data.data)
+    }
+  }
+
+  const dislikeMessage = async (messageId) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    };
+
+    try {
+      const response = await axios.delete('/api/v1/chat/like/' + messageId, config);
+      dispatch({
+        type: 'DELETE_LIKE',
+        payload: response.data.data
+      })
+    } catch (error) {
+      alert(Array.isArray(error.response.data.data) ? error.response.data.data.join(',') : error.response.data.data)
+    }
+  }
+
   const receiveMessage = async (messageResponse) => {
     if (messageResponse.success === true) {
       dispatch({
@@ -78,6 +114,8 @@ export const ChatBox = ({ className = "" }) => {
           messageList: state.messageList,
           systemTyping: state.systemTyping,
           sendMessage,
+          likeMessage,
+          dislikeMessage,
           socketRef
         }}
       >

@@ -13,6 +13,18 @@ const chatBoxReducer = (state, action) => {
         messageList: [...state.messageList, action.payload],
         systemTyping: false,
       };
+    case "SEND_LIKE":
+    case "DELETE_LIKE":
+      return {
+        ...state,
+        messageList: state.messageList.map(message => {
+          if (message._id === action.payload._id) {
+            return action.payload
+          } else {
+            return message
+          }
+        })
+      }
     default:
       return state;
   }
