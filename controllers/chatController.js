@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { getLocalizedMessage } from "../config/messages.js";
 import chatService from "../service/chatService.js";
 
-const chatController = (io) => {
+const chatController = ( queue) => {
   return {
     get: (req, res, next) => {
       try {
@@ -25,6 +25,9 @@ const chatController = (io) => {
           request: "create",
           data: { message, userId, type },
         });
+
+        // Send response to queue so it can be processed later.
+        queue.createJob(response).save();
 
         if (response.response === "create" && response.success === true) {
           return res.status(StatusCodes.CREATED).json({

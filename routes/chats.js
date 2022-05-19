@@ -1,9 +1,9 @@
 import express from "express";
 import chatController from "../controllers/chatController.js";
 
-const chats = (io) => {
+const chats = (queue) => {
   const router = express.Router();
-  const controller = chatController(io);
+  const controller = chatController(queue);
   router
     .route("/")
     // @desc    Health check the chat api.

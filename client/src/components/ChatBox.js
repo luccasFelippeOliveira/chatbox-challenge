@@ -53,9 +53,19 @@ export const ChatBox = ({ className = "" }) => {
     }
   };
 
-  const receiveMessage = async (message) => {
-    console.log(message)
-  }
+  const receiveMessage = async (messageResponse) => {
+    if (messageResponse.success === true) {
+      dispatch({
+        type: 'RECEIVE_MESSAGE',
+        payload: messageResponse.data
+      });
+    } else {
+      dispatch({
+        type: 'RECEIVE_MESSAGE',
+        payload: 'Error' 
+      });
+    }
+  };
 
   const receiveUserId = (userId) => {
     setUserId(userId);

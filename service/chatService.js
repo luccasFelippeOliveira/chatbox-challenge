@@ -14,7 +14,7 @@ const chatService = {
       const newMessage = await messageModel.create({
         message,
         type,
-        userId: normalizedUserId,
+        userId: userId,
       });
 
       return {

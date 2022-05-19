@@ -1,12 +1,17 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { ChatBoxContext } from "./ChatBox";
 import { ChatBubble } from "./ChatBubble";
 
 export const ChatArea = ({ className = "" }) => {
   const { messageList, systemTyping } = useContext(ChatBoxContext);
+  const scrollAreaRef = useRef(null);
+
+  useEffect(() => {
+    scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
+  }, [messageList])
 
   return (
-    <div className={`bg-emerald-50 rounded overflow-y-scroll ${className}`}>
+    <div ref={scrollAreaRef} className={`bg-emerald-50 rounded overflow-y-scroll ${className}`}>
       {messageList.map((message, index) => {
         return (
           <div className="w-100 mt-2" key={index}>
